@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#781f32">
+<title>Comandas</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top"><button class="burger" id="bg" aria-label="Menu">☰</button><h1 id="ttl">Comandas</h1></header>
+<div class="ov" id="ov"></div>
+<nav class="drawer" id="dr"><h3 id="dttl">Comandas</h3>
+<button data-go="home">🏠 Início</button><button data-go="count">✅ Contagem</button><button data-go="hist">🕘 Histórico</button><button data-go="cfg">⚙️ Configurações</button><button id="mcsv">⬇️ Exportar CSV</button></nav>
+<main class="wrap">
+
+<section data-v="home">
+<div class="hero"><h2 id="hname">Comandas</h2><p id="hdate"></p><button class="btn" id="hstart">Iniciar contagem</button></div>
+<div class="stats" style="margin-top:12px"><div class="stat"><b id="sTot">0</b><span>Cadastradas</span></div><div class="stat"><b id="sLast">–</b><span>Encontradas (última)</span></div><div class="stat"><b id="sMiss">–</b><span>Ausentes (última)</span></div></div>
+<div class="panel"><h2>Última contagem</h2><p class="small" id="hsum">Nenhuma contagem salva ainda.</p><div id="hmiss"></div></div>
+<div class="tiles"><button class="tile" data-go="count">✅ Contagem</button><button class="tile" data-go="hist">🕘 Histórico</button><button class="tile" data-go="cfg">⚙️ Configurações</button><button class="tile" id="tcsv">⬇️ Exportar CSV</button></div>
+</section>
+
+<section data-v="count" class="hidden">
+<div class="panel" style="margin-top:0"><h2>Conferência</h2><div class="small" id="sess"></div>
+<div class="stats" style="margin-top:10px"><div class="stat"><b id="cTot">0</b><span>Total</span></div><div class="stat"><b id="cFound">0</b><span>Encontradas</span></div><div class="stat"><b id="cAbs">0</b><span>Faltando</span></div></div>
+<div class="row"><button class="btn" id="start">Iniciar contagem</button><button class="btn red" id="fin" disabled>Finalizar e salvar</button><button class="btn sec" id="clr">Desmarcar todas</button></div>
+<div class="row"><input class="grow" id="q" placeholder="Buscar número (ex.: 73)" inputmode="numeric"><select id="cols" aria-label="Comandas por linha"></select><select id="flt"><option value="all">Todas</option><option value="found">Encontradas</option><option value="unf">Não marcadas</option><option value="gone">Sumidas na última</option></select></div>
+<div class="notice" id="note">Toque em “Iniciar contagem” e depois em cada comanda encontrada.</div></div>
+<div id="grid" class="grid"></div>
+</section>
+
+<section data-v="hist" class="hidden"><div class="panel" style="margin-top:0"><h2>Histórico de contagens</h2><div id="hl" class="small"></div></div></section>
+
+<section data-v="cfg" class="hidden"><div class="panel" style="margin-top:0"><h2>Configurações</h2>
+<div class="opt"><div>Nome do estabelecimento<small>Aparece no topo e na página inicial</small></div></div>
+<div class="row" style="margin:0 0 6px"><input class="grow" id="iname" maxlength="40" placeholder="Comandas Marquezine"></div>
+<div class="opt"><div>Quantidade de comandas<small>De 1 a 5.000</small></div></div>
+<div class="row" style="margin:0 0 6px"><input id="itot" type="number" min="1" max="5000" style="width:130px"><button class="btn" id="stot">Salvar quantidade</button></div>
+<div class="opt"><div>Brilho forte nas comandas disponíveis<small>Luz verde correndo e invadindo em volta de quem estava na última contagem</small></div><input type="checkbox" class="sw" data-o="glow"></div>
+<div class="opt"><div>Destacar comandas sumidas<small>Luz vermelha e imagem transparente</small></div><input type="checkbox" class="sw" data-o="gone"></div>
+<div class="opt"><div>Texto “Sumida na última contagem”<small>Aviso em cima da comanda</small></div><input type="checkbox" class="sw" data-o="tag"></div>
+<div class="opt"><div>Vibrar ao marcar<small>Retorno tátil no celular</small></div><input type="checkbox" class="sw" data-o="vib"></div>
+<div class="opt"><div>Confirmar antes de finalizar<small>Evita salvar sem querer</small></div><input type="checkbox" class="sw" data-o="conf"></div>
+<div class="row"><button class="btn sec" id="ecsv">Exportar CSV</button><button class="btn red" id="wipe">Apagar histórico</button></div>
+</div></section>
+
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>
