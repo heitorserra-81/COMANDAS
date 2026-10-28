@@ -11,7 +11,7 @@
 <header class="top"><button class="burger" id="bg" aria-label="Menu">☰</button><h1 id="ttl">Comandas</h1></header>
 <div class="ov" id="ov"></div>
 <nav class="drawer" id="dr"><h3 id="dttl">Comandas</h3>
-<button data-go="home">🏠 Início</button><button data-go="count">✅ Contagem</button><button data-go="hist">🕘 Histórico</button><button data-go="cfg">⚙️ Configurações</button><button id="mcsv">⬇️ Exportar CSV</button></nav>
+<button data-go="home">🏠 Início</button><button data-go="count">✅ Contagem</button><button data-go="hist">🕘 Histórico</button><button data-go="chart">📈 Gráficos</button><button data-go="cfg">⚙️ Configurações</button><button id="mcsv">⬇️ Exportar CSV</button></nav>
 <main class="wrap">
 
 <section data-v="home">
@@ -25,12 +25,14 @@
 <div class="panel" style="margin-top:0"><h2>Conferência</h2><div class="small" id="sess"></div>
 <div class="stats" style="margin-top:10px"><div class="stat"><b id="cTot">0</b><span>Total</span></div><div class="stat"><b id="cFound">0</b><span>Encontradas</span></div><div class="stat"><b id="cAbs">0</b><span>Faltando</span></div></div>
 <div class="row"><button class="btn" id="start">Iniciar contagem</button><button class="btn red" id="fin" disabled>Finalizar e salvar</button><button class="btn sec" id="clr">Desmarcar todas</button></div>
-<div class="row"><input class="grow" id="q" placeholder="Buscar número (ex.: 73)" inputmode="numeric"><select id="cols" aria-label="Comandas por linha"></select><select id="flt"><option value="all">Todas</option><option value="found">Encontradas</option><option value="unf">Não marcadas</option><option value="gone">Sumidas na última</option></select></div>
+<div class="row"><input class="grow" id="q" placeholder="Buscar número (ex.: 73)" inputmode="numeric"><select id="cols" aria-label="Comandas por linha"></select><select id="flt"><option value="all">Todas</option><option value="found">Encontradas</option><option value="unf">Não marcadas</option><option value="avail">Disponíveis na última contagem</option><option value="gone">Todas as sumidas</option><option value="ngone">Sumidas só na última contagem</option></select></div>
 <div class="notice" id="note">Toque em “Iniciar contagem” e depois em cada comanda encontrada.</div></div>
 <div id="grid" class="grid"></div>
 </section>
 
 <section data-v="hist" class="hidden"><div class="panel" style="margin-top:0"><h2>Histórico de contagens</h2><div id="hl" class="small"></div></div></section>
+
+<section data-v="chart" class="hidden"><div class="panel" style="margin-top:0"><h2>Gráficos</h2><p class="small">Evolução das últimas contagens: quanto foi encontrado, quanto ficou ausente e quanto sumiu em cada uma.</p><div id="chartBox"></div></div><div class="stats" id="chartStats" style="margin-top:12px"></div></section>
 
 <section data-v="cfg" class="hidden"><div class="panel" style="margin-top:0"><h2>Configurações</h2>
 <div class="opt"><div>Nome do estabelecimento<small>Aparece no topo e na página inicial</small></div></div>
@@ -46,6 +48,7 @@
 </div></section>
 
 </main>
+<div id="show" class="show-ov"><button id="shClose" class="btn">Pular</button><h2 id="shTit"></h2><div id="shCnt" class="small"></div><div id="shStage" class="stage"></div></div>
 <script src="js/app.js"></script>
 </body>
 </html>
