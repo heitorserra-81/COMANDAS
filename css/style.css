@@ -55,8 +55,6 @@ input.grow{flex:1;min-width:130px}
 /* estados */
 .tk.pend{--c:#ffc400}
 .tk.gone{--c:#ff3b4e;--oc:#ff3b4e}
-.dot{position:absolute;right:6%;top:4%;width:14cqw;height:14cqw;border-radius:50%;display:none;place-items:center;background:#16a34a;color:#fff;font-weight:900;font-size:8cqw;border:.8cqw solid #fff}
-.tk.on .dot{display:grid}
 
 /* histórico: miniaturas por categoria */
 .hc{border-bottom:1px solid var(--line);padding:10px 0}
@@ -105,3 +103,12 @@ input.grow{flex:1;min-width:130px}
 .stage.out .big{animation:out3d .5s ease-in both}
 @keyframes in3d{from{transform:rotateY(-100deg) rotateX(18deg) translateZ(-320px) scale(.4);opacity:0}to{transform:none;opacity:1}}
 @keyframes out3d{to{transform:rotateY(100deg) translateZ(-320px) scale(.4);opacity:0}}
+
+/* indicador de marcação: círculo branco de borda preta, canto superior direito (✕ vermelho = não contada, ✓ verde = contada) */
+.dot{position:absolute;z-index:4;top:-4cqw;right:-4cqw;width:22cqw;height:22cqw;border-radius:50%;display:none;background:#fff var(--ic) center/64% no-repeat;border:1.8cqw solid #111;box-shadow:0 .8cqw 2cqw #0006;--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 5l14 14M19 5L5 19' stroke='%23e11d48' stroke-width='4.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E")}
+.counting .dot{display:block}
+.tk.on .dot{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 12.5l5 5L20 6.5' stroke='%2316a34a' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E")}
+
+/* faixa de instalação do PWA */
+.inst{position:fixed;left:10px;right:10px;bottom:max(10px,env(safe-area-inset-bottom));z-index:70;display:flex;flex-wrap:wrap;align-items:center;gap:10px;max-width:520px;margin:auto;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 8px 30px #0005}
+.inst img{width:46px;height:46px;border-radius:11px}.inst div{flex:1;min-width:160px;font-size:13px}.inst b{display:block;font-size:15px}.inst span{color:#667169}
