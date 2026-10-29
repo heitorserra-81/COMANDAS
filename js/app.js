@@ -14,7 +14,9 @@ db.cols = db.cols || 4;
 
 let active = false, marked = new Set(), started = null;
 let G = new Set(), P = new Set(), N = new Set(), S = [];   // G=sumidas (total) · P=presentes · N=sumidas só na última · S=sumidas por contagem
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) { alert('Não foi possível salvar neste navegador.'); } };
+const cfgOnly = () => ({name: db.name, total: db.total, cols: db.cols, o: db.o, updated: db.updated || 0});
+const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) { alert('Não foi possível salvar neste navegador.'); } };
+const save = () => { db.updated = Date.now(); persist(); if (window.Cloud) Cloud.pushConfig(cfgOnly()); };
 const dt = s => new Date(s);
 const dia = s => dt(s).toLocaleDateString('pt-BR', {weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric'});
 const dm = s => dt(s).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit'});
@@ -57,6 +59,7 @@ function menu(o) { $('dr').classList.toggle('on', !!o); $('ov').classList.toggle
 function stats() {
   $('cTot').textContent = db.total; $('cFound').textContent = marked.size; $('cAbs').textContent = db.total - marked.size;
   $('fin').disabled = !active;
+  $('grid').classList.toggle('counting', active);
   $('start').textContent = active ? 'Contagem em andamento' : 'Iniciar contagem';
   $('hstart').textContent = active ? 'Continuar contagem' : 'Iniciar contagem';
   $('sess').textContent = active ? 'Contagem iniciada em ' + dia(started) + ' às ' + hora(started) : 'Contagem não iniciada';
@@ -71,7 +74,7 @@ function grid() {
     if (q && !String(n).includes(q)) continue;
     const y = marked.has(n);
     if ((f === 'found' && !y) || (f === 'unf' && y) || (f === 'avail' && !P.has(n)) || (f === 'gone' && !G.has(n)) || (f === 'ngone' && !N.has(n))) continue;
-    h.push(`<div class="${cls(n)}" data-n="${n}" role="button" aria-label="Comanda ${n}"><span class="face"></span><i class="glow"></i>${numHTML(n)}<em class="tag">${tag(n)}</em><span class="dot">✓</span></div>`);
+    h.push(`<div class="${cls(n)}" data-n="${n}" role="button" aria-label="Comanda ${n}"><span class="face"></span><i class="glow"></i>${numHTML(n)}<em class="tag">${tag(n)}</em><span class="dot"></span></div>`);
   }
   $('grid').innerHTML = h.join('');
   stats();
@@ -190,7 +193,7 @@ $('fin').onclick = () => {
   if (db.o.conf && !confirm(`Finalizar com ${marked.size} encontradas e ${miss.length} ausentes?`)) return;
   const p = last(), nm = p ? miss.filter(n => !p.missing.includes(n)) : [];
   const rec = {date: new Date().toISOString(), total: db.total, present: [...marked].sort((a, b) => a - b), missing: miss, newMissing: nm};
-  db.history.push(rec);
+  db.history.push(rec); if (window.Cloud) Cloud.pushCount(rec);
   active = false; started = null; marked = new Set(); save();
   $('note').textContent = `Contagem salva: ${miss.length} ausentes; ${nm.length} sumidas nesta contagem.`;
   all(); go('home'); show(nm, rec, !p);
@@ -206,7 +209,7 @@ $('stot').onclick = () => {
   if (active && !confirm('Alterar o total durante uma contagem? A contagem atual será reiniciada.')) return;
   db.total = n; active = false; marked = new Set(); save(); all(); alert('Quantidade atualizada para ' + n + ' comandas.');
 };
-$('wipe').onclick = () => { if (confirm('Apagar TODO o histórico de contagens? Isso não pode ser desfeito.')) { db.history = []; save(); all(); } };
+$('wipe').onclick = () => { if (confirm('Apagar TODO o histórico de contagens? Isso não pode ser desfeito.')) { db.history = []; save(); if (window.Cloud) Cloud.wipe(); all(); } };
 
 /* exportação: só números, sem zeros à esquerda */
 function csv() {
@@ -218,5 +221,16 @@ function csv() {
   a.download = 'historico_comandas.csv'; a.click(); URL.revokeObjectURL(a.href); menu(0);
 }
 ['mcsv', 'tcsv', 'ecsv'].forEach(i => $(i).onclick = csv);
+
+/* ponte com a sincronização online (js/firebase.js) */
+window.App = {
+  getLocal: () => ({cfg: cfgOnly(), history: db.history}),
+  setHistory(list) { db.history = list.sort((x, y) => x.date < y.date ? -1 : 1); persist(); all(); },
+  setConfig(c) {
+    if ((c.updated || 0) <= (db.updated || 0)) return;
+    Object.assign(db, {name: c.name || db.name, total: c.total || db.total, cols: c.cols || db.cols, updated: c.updated});
+    db.o = Object.assign({}, db.o, c.o || {}); persist(); all();
+  }
+};
 
 all(); go('home');
